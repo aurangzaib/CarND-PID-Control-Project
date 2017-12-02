@@ -1,5 +1,6 @@
 #ifndef PID_H
 #define PID_H
+#include <vector>
 
 class PID {
 public:
@@ -40,7 +41,8 @@ public:
   /*
   * Calculate the total PID error.
   */
-  double TotalError();
+  double TotalSteeringError();
+  double TotalThrottleError();
 };
 
 #endif /* PID_H */
