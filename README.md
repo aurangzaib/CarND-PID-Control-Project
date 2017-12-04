@@ -63,7 +63,7 @@ The tuning of the parameters is done in the following way:
 -  `Kd` is tuned to remove the oscillations as much as possible by damping them. At this point, car drives with minimum `CTE`, minimum oscillations and minimum drift
 
 
-Following hyperparemters are used in MPC
+Following hyperparemters are used in PID:
 
 | Param | Symbol | Value |
 |:-----------|:-------------|:-------------|
