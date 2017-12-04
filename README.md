@@ -5,7 +5,7 @@
 |:-----------|:-------------|
 | **Overview**  | `README.md`  |
 | **Setup**  | `SETUP.md`  |
-| **EKF Implementation**| `src/PID.cpp`|
+| **PID Implementation**| `src/PID.cpp`|
 | **How to run**  | `mkdir build && cd build` | 
 | |`cmake .. && make`     |
 | |`./pid`     |
@@ -52,7 +52,7 @@ Following table summarizes the purpose of each file:
 ||Implement steering value calculation method `CalculateSteering` |
 ||Implement throttle value calculation method `CalculateThrottle` |
 
-## Hyperparameters in MPC
+## Hyperparameters in PID
 
 The tuning of the parameters is done in the following way:
 
@@ -78,7 +78,7 @@ Following hyperparemters are used in MPC
 
 ## Results
 
-Following points sum up the results and conclusion for PIDC:
+Following points sum up the results and conclusion for PID Controller:
 
 - PID controller, although simpler to implement, has issues with completely damping the oscillations of front wheels of the car
 
