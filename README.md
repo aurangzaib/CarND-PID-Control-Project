@@ -69,8 +69,8 @@ Following hyperparemters are used in MPC
 |:-----------|:-------------|:-------------|
 |**Steering PID controller**||
 |Proportional Gain|Kp|0.140|
-|Differential Gain|Kd|0.000270736|
-|Integral Gain|Ki|6.10|
+|Differential Gain|Kd|6.10|
+|Integral Gain|Ki|0.000270736|
 |**Throttle PID controller**||
 |Proportional Gain|Kp|0.30|
 |Differential Gain|Kd|0.052|
