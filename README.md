@@ -91,4 +91,8 @@ Following points sum up the results and conclusion for PID Controller:
 - It can't deal with actuation latency which is around 100ms in real world
 
 
+
+The video (GIF) below shows results of PID Controller:
+
+
 ![Results](result-pid.gif)
