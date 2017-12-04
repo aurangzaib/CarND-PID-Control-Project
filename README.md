@@ -13,7 +13,7 @@
 
 ## Introduction:
 
-PID Controller is used to estimate optimized `acceleration`, `steering` using Cross Track Error `CTE` and velocity `v`.
+PID Controller is used to estimate optimized `throttle`, `steering` using Cross Track Error `CTE` and velocity `v`.
 
 The steps of the project are as following:
 
@@ -48,7 +48,7 @@ Following table summarizes the purpose of each file:
 ||Pass values to simulator|
 |**pid.cpp**| |
 ||Implement PID initialization method `Init` |
-||Implmennt PID errors update method `UpdateError` |
+||Implement PID errors update method `UpdateError` |
 ||Implement steering value calculation method `CalculateSteering` |
 ||Implement throttle value calculation method `CalculateThrottle` |
 
@@ -68,11 +68,11 @@ Following hyperparemters are used in MPC
 | Param | Symbol | Value |
 |:-----------|:-------------|:-------------|
 |**Steering PID controller**||
-|Propertional Gain|Kp|0.140|
+|Propotional Gain|Kp|0.140|
 |Differential Gain|Kd|0.000270736|
 |Integral Gain|Ki|6.10|
 |**Throttle PID controller**||
-|Propertional Gain|Kp|0.30|
+|Propotional Gain|Kp|0.30|
 |Differential Gain|Kd|0.052|
 |Integral Gain|Ki|0|
 
