@@ -4,10 +4,6 @@
 
 using namespace std;
 
-/*
-* TODO: Complete the PID class.
-*/
-
 PID::PID() {}
 
 PID::~PID() {}
@@ -29,36 +25,36 @@ void PID::UpdateError(double cte) {
   i_error += cte;
 }
 
-double PID::TotalSteeringError() {
+double PID::CalculateSteering() {
 
   // default steering value
-  double error = 0.0;
+  double steering = 0.0;
 
   // calculate steering value
-  error -= Kp * p_error;
-  error -= Kd * d_error;
-  error -= Ki * i_error;
+  steering -= Kp * p_error;
+  steering -= Kd * d_error;
+  steering -= Ki * i_error;
 
   // limit steering value
-  if (error > 1) error = 1;
-  else if (error < -1) error = -1;
+  if (steering > 1) steering = 1;
+  else if (steering < -1) steering = -1;
 
-  return error;
+  return steering;
 }
 
-double PID::TotalThrottleError() {
+double PID::CalculateThrottle() {
 
   // default throttle value
-  double error = 0.61;
+  double throttle = 0.61;
 
   // calculate throttle value
-  error -= Kp * p_error;
-  error -= Kd * d_error;
-  error -= Ki * i_error;
+  throttle -= Kp * p_error;
+  throttle -= Kd * d_error;
+  throttle -= Ki * i_error;
 
   // limit throttle value
-  if (error > 0.70) error = 0.70;
-  else if (error < -1) error = -1;
+  if (throttle > 0.70) throttle = 0.70;
+  else if (throttle < -1) throttle = -1;
 
-  return error;
+  return throttle;
 }

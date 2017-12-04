@@ -1,98 +1,94 @@
-# CarND-Controls-PID
-Self-Driving Car Engineer Nanodegree Program
+# PID Control (PIDC) Project
 
----
 
-## Dependencies
+| **Source Code**  | [https://github.com/aurangzaib/CarND-PID-Control-Project](https://github.com/aurangzaib/CarND-PID-Control-Project)  |
+|:-----------|:-------------|
+| **Overview**  | `README.md`  |
+| **Setup**  | `SETUP.md`  |
+| **EKF Implementation**| `src/PID.cpp`|
+| **How to run**  | `mkdir build && cd build` | 
+| |`cmake .. && make`     |
+| |`./pid`     |
 
-* cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1(mac, linux), 3.81(Windows)
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-* [uWebSockets](https://github.com/uWebSockets/uWebSockets)
-  * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
-  * If you install from source, checkout to commit `e94b6e1`, i.e.
-    ```
-    git clone https://github.com/uWebSockets/uWebSockets 
-    cd uWebSockets
-    git checkout e94b6e1
-    ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
-* Simulator. You can download these from the [project intro page](https://github.com/udacity/self-driving-car-sim/releases) in the classroom.
 
-There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
+## Introduction:
 
-## Basic Build Instructions
+PID Controller is used to estimate optimized `acceleration`, `steering` using Cross Track Error `CTE` and velocity `v`.
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+The steps of the project are as following:
 
-Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
+- Read `cte` and `v` from simulator
 
-## Editor Settings
+- Initialize PID parameter `Kp, Kd, Ki`
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+- Update PID Errors using CTE for steering and throttle
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+- Calculate steering value
 
-## Code Style
+- Calculate throttle value
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
 
-## Project Instructions and Rubric
+## Explanation of the code:
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+The implementation of PID Project is divided into 2 files:
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
+`main.cpp`
 
-## Hints!
+`pid.cpp`
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+Following table summarizes the purpose of each file:
 
-## Call for IDE Profiles Pull Requests
+| File | Explanation |
+|:-----------|:-------------|
+|**main.cpp**| |
+|| Initialize PID controllers for steering and throttle values |
+||Get cross track error `cte` and velocity `v` from client i.e. simulator|
+||Update PID errors using `cte` for steering and throttle controllers |
+||Get updated steering and throttle values|
+||Pass values to simulator|
+|**pid.cpp**| |
+||Implement PID initialization method `Init` |
+||Implmennt PID errors update method `UpdateError` |
+||Implement steering value calculation method `CalculateSteering` |
+||Implement throttle value calculation method `CalculateThrottle` |
 
-Help your fellow students!
+## Hyperparameters in MPC
 
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
+The tuning of the parameters is done in the following way:
 
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
+- Set `Kd` and `Ki` to 0. Tune `Kp` so that car comes to reference trajectory. At this point, car keeps crossing zero point (where `CTE` is 0) but there are oscillations and oscillations keep increasing with time
 
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
+- `Ki` is tuned so that the system bias as well increasing oscillation with time can be handled. At this point, car no longer has drift issues and oscillation doesn't keep increasing but still there are oscillations
 
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
+-  `Kd` is tuned to remove the oscillations as much as possible by damping them. At this point, car drives with minimum `CTE`, minimum oscillations and minimum drift
 
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
 
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
+Following hyperparemters are used in MPC
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+| Param | Symbol | Value |
+|:-----------|:-------------|:-------------|
+|**Steering PID controller**||
+|Propertional Gain|Kp|0.140|
+|Differential Gain|Kd|0.000270736|
+|Integral Gain|Ki|6.10|
+|**Throttle PID controller**||
+|Propertional Gain|Kp|0.30|
+|Differential Gain|Kd|0.052|
+|Integral Gain|Ki|0|
 
+## Results
+
+Following points sum up the results and conclusion for PIDC:
+
+- PID controller, although simpler to implement, has issues with completely damping the oscillations of front wheels of the car
+
+- Twiddle can be used to improve the Gains (`Kp, Kd, Ki`) but in real world it is rarely used and other methods are preferred e.g. Adaptive Sampler
+
+- It doesn't provide control of different variables and parameters of a car. For example, wheel turn, wheel turn rate, accelerartion profile, car orientation etc
+
+- As PID has no concept of Predicton Horizon, it is not possible to predict the future events and adjust PID actuations accordingly
+
+- It can't deal with actuation latency which is around 100ms in real world
+
+
+![Results](result-pid.gif)

@@ -23,27 +23,21 @@ std::string hasData(std::string s) {
 int main() {
   uWS::Hub h;
 
-  PID pid, pid_throttle;
-  /*
-    - p controller keeps oscillating around target
-    - pd controller reduces the oscillation around target
-    - pid controller removes the steady state error introduced by the systematic bias
-    - tau_i determines how fast pid removes the oscillations and approaches to the target point
-  */
-  // Initialize the pid variable.
-  pid.Init(0.140, 0.000270736, 6.10);
-  pid_throttle.Init(0.30, 0.0000, 0.0526185);
+  PID pid_steering, pid_throttle;
 
-  h.onMessage([&pid, &pid_throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
-    // "42" at the start of the message means there's a websocket message event.
-    // The 4 signifies a websocket message
-    // The 2 signifies a websocket event
+  // Initialize the pid variable.
+  pid_steering.Init(0.140, 0.000270736, 6.10);
+  pid_throttle.Init(0.30, 0.0000, 0.052);
+
+  h.onMessage([&pid_steering, &pid_throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
       auto s = hasData(std::string(data).substr(0, length));
       if (s != "") {
         auto j = json::parse(s);
         std::string event = j[0].get<std::string>();
         if (event == "telemetry") {
+
+          // get data from client
           // j[1] is the data JSON object
           double cte = std::stod(j[1]["cte"].get<std::string>());
           double speed = std::stod(j[1]["speed"].get<std::string>());
@@ -51,13 +45,14 @@ int main() {
           double steer_value = 0.0, throttle_value = 0.0;
 
           // steering value
-          pid.UpdateError(cte);
-          steer_value = pid.TotalSteeringError();
+          pid_steering.UpdateError(cte);
+          steer_value = pid_steering.CalculateSteering();
 
           // throttle value
           pid_throttle.UpdateError(fabs(cte));
-          throttle_value = pid_throttle.TotalThrottleError();
+          throttle_value = pid_throttle.CalculateThrottle();
 
+          // send updated steering and throttle to client
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = throttle_value;
@@ -67,6 +62,7 @@ int main() {
         }
       } else {
         // Manual driving
+        // no calculation
         std::string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }

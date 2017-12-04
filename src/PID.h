@@ -39,10 +39,10 @@ public:
   void UpdateError(double cte);
 
   /*
-  * Calculate the total PID error.
+  * Calculate steering and throttle values.
   */
-  double TotalSteeringError();
-  double TotalThrottleError();
+  double CalculateSteering();
+  double CalculateThrottle();
 };
 
 #endif /* PID_H */
