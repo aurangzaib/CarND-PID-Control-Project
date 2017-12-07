@@ -86,7 +86,7 @@ Following points sum up the results and conclusion for PID Controller:
 
 - It doesn't provide control of different variables and parameters of a car. For example, wheel turn, wheel turn rate, accelerartion profile, car orientation etc
 
-- As PID has no concept of Predicton Horizon, it is not possible to predict the future events and adjust PID actuations accordingly
+- As PID has no concept of Prediction Horizon, it is not possible to predict the future events and adjust PID actuations accordingly
 
 - It can't deal with actuation latency which is around 100ms in real world
 
